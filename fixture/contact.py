@@ -3,6 +3,10 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
+    def go_to_home_page(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("home").click()
+
     def return_to_home_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
@@ -74,3 +78,14 @@ class ContactHelper:
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.return_to_home_page()
+
+    def delete_first_contact(self):
+        wd = self.app.wd
+        self.go_to_home_page()
+        # select first contact
+        wd.find_element_by_name("selected[]").click()
+        # submit deletion
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        # confirm choice with popup dialog box
+        wd.switch_to_alert().accept()
+        self.go_to_home_page()
