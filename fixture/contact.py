@@ -72,3 +72,8 @@ class ContactHelper:
         # confirm choice with popup dialog box
         wd.switch_to_alert().accept()
         self.go_to_home_page()
+
+    def count(self):
+        wd = self.app.wd
+        self.go_to_home_page()
+        return len(wd.find_elements_by_name("selected[]"))
