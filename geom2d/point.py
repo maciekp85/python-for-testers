@@ -13,3 +13,6 @@ class Point:
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
+
+    def __lt__(self, other):
+        return self.y < other.y
