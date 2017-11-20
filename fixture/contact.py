@@ -29,6 +29,7 @@ class ContactHelper:
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.return_to_home_page()
+        self.contact_cache = None
 
     def fill_contact_form(self, contact):
         # fill contact form
@@ -67,6 +68,7 @@ class ContactHelper:
         # submit contact edition
         wd.find_element_by_name("update").click()
         self.return_to_home_page()
+        self.contact_cache = None
 
     def delete_first_contact(self):
         wd = self.app.wd
@@ -78,24 +80,28 @@ class ContactHelper:
         # confirm choice with popup dialog box
         wd.switch_to_alert().accept()
         self.go_to_home_page()
+        self.contact_cache = None
 
     def count(self):
         wd = self.app.wd
         self.go_to_home_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    contact_cache = None
+
     def get_contact_list(self):
-        wd = self.app.wd
-        self.go_to_home_page()
-        contacts = []
-        for row in wd.find_elements_by_name("entry"):
-            cells = row.find_elements_by_xpath("td")
-            id = cells[0].find_element_by_name("selected[]").get_attribute("id")
-            last_name = cells[1].text
-            first_name = cells[2].text
-            contacts.append(Contact(firstname=first_name, middlename="", lastname=last_name, nickname="janek",
-                               title="Test title", company="Test company", address="test address",
-                               home="+12 111 222 333", mobile="111222333", work="777888999", fax="",
-                               email="jan.kowalski@test.pl", email2="jan.kowalski2@test.pl", byear="1985",
-                               address2="test secondary address", phone2="", notes="test notes", id=id))
-        return contacts
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.go_to_home_page()
+            self.contact_cache = []
+            for row in wd.find_elements_by_name("entry"):
+                cells = row.find_elements_by_xpath("td")
+                id = cells[0].find_element_by_name("selected[]").get_attribute("id")
+                last_name = cells[1].text
+                first_name = cells[2].text
+                self.contact_cache.append(Contact(firstname=first_name, middlename="", lastname=last_name, nickname="janek",
+                                   title="Test title", company="Test company", address="test address",
+                                   home="+12 111 222 333", mobile="111222333", work="777888999", fax="",
+                                   email="jan.kowalski@test.pl", email2="jan.kowalski2@test.pl", byear="1985",
+                                   address2="test secondary address", phone2="", notes="test notes", id=id))
+        return list(self.contact_cache)
