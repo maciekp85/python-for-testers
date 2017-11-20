@@ -1,3 +1,6 @@
+from model.contact import Contact
+
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -80,3 +83,19 @@ class ContactHelper:
         wd = self.app.wd
         self.go_to_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.go_to_home_page()
+        contacts = []
+        for row in wd.find_elements_by_name("entry"):
+            cells = row.find_elements_by_xpath("td")
+            id = cells[0].find_element_by_name("selected[]").get_attribute("id")
+            last_name = cells[1].text
+            first_name = cells[2].text
+            contacts.append(Contact(firstname=first_name, middlename="", lastname=last_name, nickname="janek",
+                               title="Test title", company="Test company", address="test address",
+                               home="+12 111 222 333", mobile="111222333", work="777888999", fax="",
+                               email="jan.kowalski@test.pl", email2="jan.kowalski2@test.pl", byear="1985",
+                               address2="test secondary address", phone2="", notes="test notes", id=id))
+        return contacts
