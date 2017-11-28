@@ -3,7 +3,6 @@ import re
 
 
 class ContactHelper:
-
     def __init__(self, app):
         self.app = app
 
@@ -106,12 +105,13 @@ class ContactHelper:
                 id = cells[0].find_element_by_name("selected[]").get_attribute("id")
                 last_name = cells[1].text
                 first_name = cells[2].text
-                all_phones = cells[5].text.splitlines()
-                self.contact_cache.append(Contact(firstname=first_name, middlename="", lastname=last_name, nickname="janek",
-                                   title="Test title", company="Test company", address="test address",
-                                   home=all_phones[0], mobile=all_phones[1], work=all_phones[2], fax="",
-                                   email="jan.kowalski@test.pl", email2="jan.kowalski2@test.pl", byear="1985",
-                                   address2="test secondary address", phone2=all_phones[3], notes="test notes", id=id))
+                all_phones = cells[5].text
+                self.contact_cache.append(
+                    Contact(firstname=first_name, middlename="", lastname=last_name, nickname="janek",
+                            all_phones_from_home_page=all_phones, title="Test title", company="Test company",
+                            address="test address", fax="", email="jan.kowalski@test.pl",
+                            email2="jan.kowalski2@test.pl", byear="1985", address2="test secondary address",
+                            notes="test notes", id=id))
         return list(self.contact_cache)
 
     def open_contact_to_edit_by_index(self, index):
