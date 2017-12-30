@@ -2,7 +2,7 @@ from model.contact import Contact
 from random import randrange
 
 
-def test_modify_contact_title(app):
+def test_modify_contact_title(app, check_ui):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Jan", middlename="", lastname="Kowalski", nickname="janek",
                                title="Test title", company="Test company", address="test address",
@@ -18,6 +18,8 @@ def test_modify_contact_title(app):
     assert len(old_contacts) == app.contact.count()
     old_contacts[index] = contact
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
+    if check_ui:
+        assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
 
 # The test will be parametrized in next lessons group
 # def test_modify_contact_company(app):
