@@ -1,3 +1,5 @@
+from selenium.webdriver.support.select import Select
+
 from model.contact import Contact
 import re
 
@@ -30,6 +32,32 @@ class ContactHelper:
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.return_to_home_page()
         self.contact_cache = None
+
+    def add_contact_to_group(self, contact, group):
+        wd = self.app.wd
+        self.open_add_new_contact_page()
+        # fill contact form
+        self.fill_contact_form(contact)
+        # select group
+        self.select_group_by_name(group)
+        # submit contact creation
+        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.return_to_home_page()
+        self.contact_cache = None
+
+    def select_first_group(self):
+        wd = self.app.wd
+        select = Select(wd.find_element_by_name("new_group"))
+        options = select.options
+        if len(options) > 1:
+            select.select_by_value(options[1].get_attribute("value"))
+
+    def select_group_by_name(self, group):
+        wd = self.app.wd
+        select = Select(wd.find_element_by_name("new_group"))
+        options = select.options
+        if len(options) > 1:
+            select.select_by_visible_text(group.name)
 
     def fill_contact_form(self, contact):
         # fill contact form
